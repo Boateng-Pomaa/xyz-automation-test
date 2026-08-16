@@ -12,6 +12,7 @@ public abstract class BaseTest {
     @BeforeEach
     void setUp() {
         driver = SharedDriver.get();
+
         homePage = new HomePage(driver).reset();
     }
 }
