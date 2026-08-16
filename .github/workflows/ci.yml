@@ -1,0 +1,49 @@
+name: CI
+
+# The target app rate-limits IPs that issue many rapid automated page loads
+# (see docs/TEST_PLAN.md, section 4), so this workflow intentionally does not
+# run on every push - it's manual (workflow_dispatch) or on pushes to main.
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build test image
+        run: docker build -t xyz-bank-tests .
+
+      - name: Run test suite in Docker
+        run: |
+          mkdir -p target
+          docker run --rm -v "${{ github.workspace }}/target:/workspace/target" xyz-bank-tests
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results
+          if-no-files-found: warn
+
+      - name: Generate Allure report
+        if: always()
+        uses: simple-elf/allure-report-action@v1.9
+        with:
+          allure_results: target/allure-results
+          allure_report: allure-report
+          gh_pages: gh-pages
+          allure_history: allure-history
+
+      - name: Publish Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
