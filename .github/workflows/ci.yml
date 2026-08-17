@@ -5,7 +5,7 @@ name: CI
 # run on every push - it's manual (workflow_dispatch) or on pushes to main.
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
