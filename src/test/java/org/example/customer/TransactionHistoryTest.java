@@ -25,9 +25,8 @@ class TransactionHistoryTest extends BaseTest {
     @Description("A customer can view their transaction history, and it offers no edit or delete controls.")
     void transactionHistory_isViewableAndOffersNoEditOrDeleteControls() {
         AccountPage accountPage = openAccountForNewCustomer();
-        accountPage.goToDeposit().deposit(10);
 
-        TransactionsPage transactionsPage = accountPage.goToTransactions();
+        TransactionsPage transactionsPage = depositUntilTransactionRecorded(accountPage, 10, 0);
 
         assertTrue(transactionsPage.getTransactionCount() > 0,
                 "Expected seeded transaction history to be non-empty");
@@ -42,11 +41,11 @@ class TransactionHistoryTest extends BaseTest {
     void deposit_addsNewRecordToTransactionHistory() {
         AccountPage accountPage = openAccountForNewCustomer();
 
-        int countBefore = accountPage.goToTransactions().getTransactionCount();
+        TransactionsPage transactionsPage = accountPage.goToTransactions();
+        int countBefore = transactionsPage.getTransactionCount();
+        accountPage = transactionsPage.back();
 
-        accountPage.goToDeposit().deposit(25);
-
-        int countAfter = accountPage.goToTransactions().getTransactionCount();
-        assertEquals(countBefore + 1, countAfter);
+        TransactionsPage afterDeposit = depositUntilTransactionRecorded(accountPage, 25, countBefore);
+        assertEquals(countBefore + 1, afterDeposit.getTransactionCount());
     }
 }
