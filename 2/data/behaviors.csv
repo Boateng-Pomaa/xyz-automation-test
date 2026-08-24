@@ -1,0 +1,7 @@
+"BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
+"1","XYZ Bank","1","Customer - Transaction History","0","0","View transaction history","0"
+"0","XYZ Bank","0","Manager - Account Management","1","0","Open account","0"
+"0","XYZ Bank","0","Manager - Customer Management","1","0","Delete customer","0"
+"0","XYZ Bank","0","Manager - Customer Management","1","0","Add customer","0"
+"0","XYZ Bank","1","Customer - Transactions","1","0","Withdraw","0"
+"0","XYZ Bank","0","Customer - Transactions","1","0","Deposit","0"
