@@ -3,6 +3,7 @@ package org.example.pages;
 import java.time.Duration;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -28,8 +29,22 @@ public abstract class BasePage {
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
+    /**
+     * Clicking can race an Angular re-render of the target element between the
+     * clickable-wait resolving and the click itself, so a stale reference is
+     * retried against a freshly located element rather than failing the test.
+     */
     protected void click(By locator) {
-        waitClickable(locator).click();
+        StaleElementReferenceException lastFailure = null;
+        for (int attempt = 0; attempt < 3; attempt++) {
+            try {
+                waitClickable(locator).click();
+                return;
+            } catch (StaleElementReferenceException e) {
+                lastFailure = e;
+            }
+        }
+        throw lastFailure;
     }
 
     protected void type(By locator, String text) {

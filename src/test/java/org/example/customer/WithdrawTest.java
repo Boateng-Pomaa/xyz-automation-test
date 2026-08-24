@@ -23,8 +23,8 @@ class WithdrawTest extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Withdrawing a valid amount decreases the account balance by that amount.")
     void withdraw_validAmount_decreasesBalance() {
-        CustomerLoginPage loginPage = homePage.goToCustomerLogin();
-        AccountPage accountPage = loginPage.loginAs("Ron Weasly");
+        AccountPage accountPage = openAccountForNewCustomer();
+        accountPage.goToDeposit().deposit(100);
 
         int balanceBefore = accountPage.getBalance();
 

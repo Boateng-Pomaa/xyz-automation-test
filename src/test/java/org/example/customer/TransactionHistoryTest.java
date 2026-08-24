@@ -12,7 +12,6 @@ import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import org.example.base.BaseTest;
 import org.example.pages.customer.AccountPage;
-import org.example.pages.customer.CustomerLoginPage;
 import org.example.pages.customer.TransactionsPage;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +24,8 @@ class TransactionHistoryTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("A customer can view their transaction history, and it offers no edit or delete controls.")
     void transactionHistory_isViewableAndOffersNoEditOrDeleteControls() {
-        CustomerLoginPage loginPage = homePage.goToCustomerLogin();
-        AccountPage accountPage = loginPage.loginAs("Neville Longbottom");
+        AccountPage accountPage = openAccountForNewCustomer();
+        accountPage.goToDeposit().deposit(10);
 
         TransactionsPage transactionsPage = accountPage.goToTransactions();
 
@@ -41,8 +40,7 @@ class TransactionHistoryTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("A new deposit is reflected as a new record in the transaction history.")
     void deposit_addsNewRecordToTransactionHistory() {
-        CustomerLoginPage loginPage = homePage.goToCustomerLogin();
-        AccountPage accountPage = loginPage.loginAs("Neville Longbottom");
+        AccountPage accountPage = openAccountForNewCustomer();
 
         int countBefore = accountPage.goToTransactions().getTransactionCount();
 
